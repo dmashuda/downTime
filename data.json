@@ -1,0 +1,6 @@
+{
+  "Port": ":8080",
+  "Gateway": "192.168.0.1:80",
+  "TestHosts": ["google.com:80", "facebook.com:80", "cloudflare.com:80"],
+  "DbName": "./database.db"
+}
