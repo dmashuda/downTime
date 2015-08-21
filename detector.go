@@ -24,7 +24,7 @@ type NetworkResponse struct {
 	Error     error         `sql:"-"`
 	Time      time.Duration `sql:"-"`
 	EndTime   time.Time     `sql:"-"`
-	MonthInt  int    `sql:"-"`
+	MonthInt  int           `sql:"-"`
 }
 type Configuration struct {
 	Port      string
