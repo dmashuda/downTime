@@ -9,8 +9,8 @@
                         var container = document.getElementById('myChart');
                         var chart = new google.visualization.Timeline(container);
                         var dataTable = new google.visualization.DataTable();
-                        dataTable.addColumn({ type: 'string', id: 'Room' });
-                        dataTable.addColumn({ type: 'string', id: 'Name' });
+                        dataTable.addColumn({ type: 'string', id: 'Host' });
+                        dataTable.addColumn({ type: 'string', id: 'Error' });
                         dataTable.addColumn({ type: 'date', id: 'Start' });
                         dataTable.addColumn({ type: 'date', id: 'End' });
                         dataTable.addRows([
@@ -29,6 +29,7 @@
         </script>
 </head>
 <body>
-<div id="myChart" style="height: 500px;"></div>
+<h1>Network Timeline</h1>
+<div id="myChart" style="height: 250px;"></div>
 </body>
 </html>

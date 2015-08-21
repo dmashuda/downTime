@@ -96,7 +96,7 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(results); i++ {
 		results[i].Time = 10 * time.Second
 		results[i].EndTime = results[i].CreatedAt.Add(results[i].Time)
-		results[i].MonthInt = int(results[i].CreatedAt.Month())
+		results[i].MonthInt = int(results[i].CreatedAt.Month()) - 1
 
 	}
 	chartTemplate.Execute(w, results)
