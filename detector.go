@@ -23,10 +23,10 @@ type NetworkResponse struct {
 	Time      time.Duration `sql:"-"`
 }
 type Configuration struct {
-	Port     string
-	Gateway  string
+	Port      string
+	Gateway   string
 	TestHosts []string
-	DbName   string
+	DbName    string
 }
 
 var defaults = Configuration{
