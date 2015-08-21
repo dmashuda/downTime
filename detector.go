@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
+	"html/template"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -21,6 +23,8 @@ type NetworkResponse struct {
 	HasError  bool
 	Error     error         `sql:"-"`
 	Time      time.Duration `sql:"-"`
+	EndTime   time.Time     `sql:"-"`
+	MonthInt  int    `sql:"-"`
 }
 type Configuration struct {
 	Port      string
@@ -41,6 +45,7 @@ var defaults = Configuration{
 
 var configFile = flag.String("json", "", "Config file")
 var config Configuration
+var chartTemplate *template.Template
 
 var dbInstance gorm.DB
 
@@ -64,6 +69,7 @@ func main() {
 	fmt.Println(config)
 
 	dbSetup()
+	templateSetup()
 	channel := make(chan NetworkResponse)
 	go netTestHandler(channel)
 
@@ -87,13 +93,14 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 	results := []NetworkResponse{}
 	db.Where(&NetworkResponse{}).Find(&results)
 
-	jsonVal, jsonerror := json.Marshal(results)
-	if jsonerror != nil {
-		val := fmt.Sprintf("%s", jsonerror)
-		fmt.Fprintf(w, val)
-		return
+	for i := 0; i < len(results); i++ {
+		results[i].Time = 10 * time.Second
+		results[i].EndTime = results[i].CreatedAt.Add(results[i].Time)
+		results[i].MonthInt = int(results[i].CreatedAt.Month())
+
 	}
-	fmt.Fprintf(w, string(jsonVal))
+	chartTemplate.Execute(w, results)
+	//fmt.Fprintf(w, string(jsonVal))
 }
 
 func dialTester(host string, isGateway bool, c chan NetworkResponse) {
@@ -109,6 +116,24 @@ func dialTester(host string, isGateway bool, c chan NetworkResponse) {
 		}
 		time.Sleep(time.Second * 10)
 	}
+}
+
+func templateSetup() {
+	dat, err := ioutil.ReadFile("chart.go.html")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	temp := string(dat)
+
+	t := template.New("Chart")
+	t, err = t.Parse(temp)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	chartTemplate = t
 }
 
 func dbSetup() {
