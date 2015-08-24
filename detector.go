@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/jinzhu/gorm"
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/mxk/go-sqlite/sqlite3"
 	"html/template"
 	"io/ioutil"
 	"log"
